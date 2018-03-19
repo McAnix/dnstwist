@@ -301,7 +301,7 @@ class DomainFuzz():
             'f': [u'f', ],
             'g': [u'ɡ', u'g', ],
             'h': [u'h', u'һ', ],
-            'i': [u'Ꭵ', u'i', u'і', ],
+            'i': [u'i', u'і', ],
             'j': [u'j', u'ϳ', u'ј', ],
             'k': [u'k', ],
             'l': [u'l', ],
@@ -316,8 +316,8 @@ class DomainFuzz():
             'u': [u'ᴜ', u'u', ],
             'v': [u'v̇', u'v', ],
             'w': [u'w', u'ԝ', ],
-            'x': [u'x', u'ҳ', u'х', ],
-            'y': [u'у', u'ỵ', u'y', ],
+            'x': [u'x', u'х', ],
+            'y': [u'у', u'y', ],
             'z': [u'ᴢ', u'z', ],
         }
 
@@ -479,8 +479,11 @@ class DomainFuzz():
             self.domains.append({ 'fuzzer': 'Addition', 'domain-name': domain + '.' + self.tld })
         for domain in self.__bitsquatting():
             self.domains.append({ 'fuzzer': 'Bitsquatting', 'domain-name': domain + '.' + self.tld })
-        for domain in self.__cyrillic():
-            self.domains.append({'fuzzer': 'Cyrillic', 'domain-name': domain + '.' + self.tld})
+
+        if args.fullcyrillic:
+            for domain in self.__cyrillic():
+                self.domains.append({'fuzzer': 'Cyrillic', 'domain-name': domain + '.' + self.tld})
+
         for domain in self.__homoglyph():
             self.domains.append({ 'fuzzer': 'Homoglyph', 'domain-name': domain + '.' + self.tld })
         for domain in self.__hyphenation():
@@ -851,6 +854,7 @@ def main():
     parser.add_argument('-z', '--zones', type=str, metavar='LIST', help='Match the provided label against this set of domain zones')
     parser.add_argument('--nameservers', type=str, metavar='LIST', help='comma separated list of nameservers to query')
     parser.add_argument('--trustedns', type=str, metavar='LIST', help='comma separated list of trusted nameservers to omit from the report')
+    parser.add_argument('--fullcyrillic', action='store_true', help='Perform a full cyrillic conversion on all permutations (slow)')
     parser.add_argument('--port', type=int, metavar='PORT', help='the port to send queries to')
 
     if len(sys.argv) < 2:
